@@ -5,7 +5,7 @@ hwclock --systohc
 sed -i '165s/.//' /etc/locale.gen
 locale-gen
 echo "LANG=en_US.UTF-8" >> /etc/locale.conf
-echo "KEYMAP=de_CH-latin1" >> /etc/vconsole.conf
+#echo "KEYMAP=de_CH-latin1" >> /etc/vconsole.conf
 echo "arch" >> /etc/hostname
 echo "127.0.0.1 localhost" >> /etc/hosts
 echo "::1       localhost" >> /etc/hosts
@@ -25,11 +25,18 @@ pacman -S efibootmgr networkmanager network-manager-applet dialog wpa_supplicant
 # grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ARCH --removable #change the directory to /boot/efi is you mounted the EFI partition at /boot/efi
 # grub-mkconfig -o /boot/grub/grub.cfg
 
-bootctl --esp-path=/boot/efi --boot-path=/boot install
-cp -vf ./systemd-boot/95-systemd-boot.hook /etc/pacman.d/hooks
-cp -vf ./systemd-boot/loader.conf /boot/efi/loader/
-cp -vf ./systemd-boot/hermes.conf /boot/efi/loader/entries/
+bootctl --path=/boot install
 
+echo "default arch" > /boot/loader/loader.conf
+echo "timeout 3" >> /boot/loader/loader.conf
+echo "console-mode max" >> /boot/loader/loader.conf
+echo "editor no" >> /boot/loader/loader.conf
+
+echo "title Arch Linux" > /boot/loader/entries/arch.conf
+echo "linux /vmlinuz-linux" >> /boot/loader/entries/arch.conf
+echo "initrd /initramfs-linux.img" >> /boot/loader/entries/arch.conf
+echo "options root=UUID=$(blkid -s UUID -o value /dev/vda2) rw" >> /boot/loader/entries/arch.conf
+EOF
 
 systemctl enable NetworkManager
 systemctl enable bluetooth
@@ -47,7 +54,7 @@ useradd -m damian
 echo damian:password | chpasswd
 # usermod -aG libvirt damian
 
-echo "damian ALL=(ALL) ALL" >> /etc/sudoers.d/ermanno
+echo "damian ALL=(ALL) ALL" >> /etc/sudoers.d/damian
 
 printf "\e[1;32mDone! Type exit, umount -a and reboot.\e[0m"
 
