@@ -34,8 +34,10 @@ echo "editor no" >> /boot/loader/loader.conf
 
 echo "title Arch Linux" > /boot/loader/entries/arch.conf
 echo "linux /vmlinuz-linux" >> /boot/loader/entries/arch.conf
+echo "initrd /intel-ucode.img" >> /boot/loader/entries/arch.conf
 echo "initrd /initramfs-linux.img" >> /boot/loader/entries/arch.conf
-echo "options root=UUID=$(blkid -s UUID -o value /dev/vda2) rw" >> /boot/loader/entries/arch.conf
+echo "options root=UUID=$(blkid -s UUID -o value /dev/vda2) rootflags=subvol=@ rw" >> /boot/loader/entries/arch.conf
+
 EOF
 
 systemctl enable NetworkManager
