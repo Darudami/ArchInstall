@@ -38,6 +38,12 @@ echo "initrd /intel-ucode.img" >> /boot/loader/entries/arch.conf
 echo "initrd /initramfs-linux.img" >> /boot/loader/entries/arch.conf
 echo "options root=UUID=$(blkid -s UUID -o value /dev/vda2) rootflags=subvol=@ rw" >> /boot/loader/entries/arch.conf
 
+echo "title Arch Linux Fallback" > /boot/loader/entries/arch-fallback.conf
+echo "linux /vmlinuz-linux" >> /boot/loader/entries/arch-fallback.conf
+echo "initrd /intel-ucode.img" >> /boot/loader/entries/arch-fallback.conf
+echo "initrd /initramfs-linux-fallback.img" >> /boot/loader/entries/arch-fallback.conf
+echo "options root=UUID=$(blkid -s UUID -o value /dev/vda2) rootflags=subvol=@ rw" >> /boot/loader/entries/arch-fallback.conf
+
 EOF
 
 systemctl enable NetworkManager
